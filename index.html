@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc Mừng 20/10 - Khánh Ngọc</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #feada6 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+            color: #4a4a4a;
+        }
+
+        /* Lớp phủ màn hình chờ bấm để phát nhạc */
+        #welcomeOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            color: white;
+            transition: opacity 0.5s ease;
+        }
+
+        .welcome-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 30px;
+            border-radius: 24px;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .welcome-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: #ff80ab;
+            margin-bottom: 15px;
+        }
+
+        .welcome-desc {
+            font-size: 1rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            color: #fce4ec;
+        }
+
+        .btn-start {
+            background: linear-gradient(45deg, #ff4081, #ff1744);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 64, 129, 0.5);
+            transition: all 0.3s;
+        }
+
+        .btn-start:hover {
+            transform: scale(1.05);
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Marquee Header */
+        .marquee-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
+            padding: 8px 0;
+            z-index: 10;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .marquee-text {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 15s linear infinite;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #d63384;
+            text-shadow: 0 0 5px rgba(255,255,255,0.8);
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Container Chính */
+        .card-container {
+            position: relative;
+            z-index: 2;
+            width: 90%;
+            max-width: 520px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            padding: 35px 20px;
+            box-shadow: 0 15px 35px rgba(230, 81, 0, 0.15), 0 5px 15px rgba(0,0,0,0.05);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: #d81b60;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        /* Typing Effect Container */
+        .typing-container {
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 16px;
+        }
+
+        .typing-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #8e24aa;
+            line-height: 1.5;
+        }
+
+        /* Control Âm nhạc */
+        .music-box {
+            background: rgba(255, 240, 245, 0.9);
+            border: 1px dashed #ff80ab;
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .music-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #c2185b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Play disk icon */
+        .disk {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #333;
+            border: 2px solid #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+
+        .disk.rotating {
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        .disk::after {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: #ff80ab;
+            border-radius: 50%;
+        }
+
+        /* Gift Button */
+        .btn-gift {
+            background: linear-gradient(45deg, #ff1744, #ff5252);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 23, 68, 0.4);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .btn-gift:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 23, 68, 0.6);
+        }
+
+        /* Modal Thiệp */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            width: 85%;
+            max-width: 400px;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem;
+            color: #e91e63;
+            margin-bottom: 12px;
+        }
+
+        .modal-body {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            background: #ff4081;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Màn hình mở đầu giống TikTok -->
+    <div id="welcomeOverlay">
+        <div class="welcome-box">
+            <h2 class="welcome-title">Dành cho Khánh Ngọc 💖</h2>
+            <p class="welcome-desc">Bấm vào nút bên dưới để mở món quà bất ngờ và bật nhạc chill nhé ôg!</p>
+            <button class="btn-start" onclick="startExperience()">✨ Khám phá ngay ✨</button>
+        </div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <!-- Băng chuyền chữ chạy -->
+    <div class="marquee-container">
+        <div class="marquee-text">
+            ✨ Chúc Khánh Ngọc 20/10 thật nhiều niềm vui, luôn xinh đẹp, rạng rỡ và hạnh phúc nhé! ✨ 💖
+        </div>
+    </div>
+
+    <!-- Khung Card chính -->
+    <div class="card-container">
+        <h1 class="title">Chúc Khánh Ngọc 20/10 Vui Vẻ! 💖</h1>
+
+        <!-- Khung gõ chữ tự động -->
+        <div class="typing-container">
+            <div class="typing-text" id="typing"></div>
+        </div>
+
+        <!-- Khung âm nhạc liên kết trực tiếp file nhạc trên GitHub -->
+        <div class="music-box">
+            <div class="music-title">
+                <div class="disk" id="diskBtn"></div>
+                <span id="musicStatus">Nhạc: nhacchill.mp3 🎵</span>
+            </div>
+            <!-- Thẻ audio gọi trực tiếp file nhạc để cùng thư mục trên GitHub -->
+            <audio id="bgMusic" src="nhacchill.mp3" loop></audio>
+        </div>
+
+        <button class="btn-gift" onclick="openModal()">🎁 Bấm vào đây nè Khánh Ngọc!</button>
+    </div>
+
+    <!-- Modal Lời chúc bí mật -->
+    <div class="modal" id="giftModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Gửi Khánh Ngọc ✨</h2>
+            <div class="modal-body">
+                Chúc Khánh Ngọc ngày 20/10 luôn ngập tràn tiếng cười, luôn xinh đẹp và gặp thật nhiều may mắn! Mong rằng mọi điều tốt đẹp nhất sẽ luôn đến với Khánh Ngọc mỗi ngày nhé! 🥰🌸
+            </div>
+            <button class="close-btn" onclick="closeModal()">Cảm ơn nha 💕</button>
+        </div>
+    </div>
+
+    <script>
+        const bgMusic = document.getElementById('bgMusic');
+        const diskBtn = document.getElementById('diskBtn');
+        const musicStatus = document.getElementById('musicStatus');
+
+        // Hàm xử lý khi bấm vào nút mở đầu
+        function startExperience() {
+            const overlay = document.getElementById('welcomeOverlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 500);
+
+            // Tự động phát nhạc khi bấm nút mở màn hình
+            bgMusic.play().then(() => {
+                diskBtn.classList.add('rotating');
+                musicStatus.textContent = "Đang phát nhạc 🎵";
+            }).catch(e => {
+                console.log("Autoplay blocked:", e);
+            });
+        }
+
+        // Bấm vào đĩa nhạc để bật/tạm dừng
+        diskBtn.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                diskBtn.classList.add('rotating');
+                musicStatus.textContent = "Đang phát nhạc 🎵";
+            } else {
+                bgMusic.pause();
+                diskBtn.classList.remove('rotating');
+                musicStatus.textContent = "Đã tạm dừng nhạc ⏸️";
+            }
+        });
+
+        // --- Hiệu ứng Canvas Heart & Flower Falling ---
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const items = [];
+        const types = ['❤️', '💖', '🌸', '✨', '🌷'];
+
+        class Particle {
+            constructor(x, y) {
+                this.x = x || Math.random() * canvas.width;
+                this.y = y || -20;
+                this.size = Math.random() * 18 + 12;
+                this.speedY = Math.random() * 1.5 + 1;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.type = types[Math.floor(Math.random() * types.length)];
+                this.opacity = Math.random() * 0.7 + 0.3;
+                this.rotation = Math.random() * 360;
+                this.rotSpeed = Math.random() * 2 - 1;
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.rotation += this.rotSpeed;
+                if (this.y > canvas.height + 20) {
+                    this.y = -20;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation * Math.PI / 180);
+                ctx.globalAlpha = this.opacity;
+                ctx.font = `${this.size}px serif`;
+                ctx.fillText(this.type, 0, 0);
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 35; i++) {
+            items.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            items.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // Click bùng nổ trái tim
+        window.addEventListener('click', (e) => {
+            for (let i = 0; i < 5; i++) {
+                const p = new Particle(e.clientX, e.clientY);
+                p.speedY = Math.random() * 4 - 2;
+                p.speedX = Math.random() * 4 - 2;
+                items.push(p);
+                setTimeout(() => items.shift(), 3000);
+            }
+        });
+
+        // --- Hiệu ứng gõ chữ ---
+        const messages = [
+            "Hôm nay là một ngày thật đặc biệt...",
+            "Chúc Khánh Ngọc luôn xinh đẹp và rạng rỡ!",
+            "Mong Khánh Ngọc luôn vui vẻ và hạnh phúc mỗi ngày 🌸",
+            "Happy Vietnamese Women's Day! ✨"
+        ];
+
+        let msgIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typingEl = document.getElementById('typing');
+
+        function typeEffect() {
+            const currentMsg = messages[msgIndex];
+            
+            if (isDeleting) {
+                typingEl.textContent = currentMsg.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingEl.textContent = currentMsg.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 40 : 80;
+
+            if (!isDeleting && charIndex === currentMsg.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                msgIndex = (msgIndex + 1) % messages.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(typeEffect, typeSpeed);
+        }
+        typeEffect();
+
+        // Modal Lời chúc
+        function openModal() {
+            document.getElementById('giftModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('giftModal').style.display = 'none';
+        }
+    </script>
+</body>
+          </html>
+          
